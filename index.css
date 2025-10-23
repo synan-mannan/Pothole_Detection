@@ -1,0 +1,59 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    background-color: rgb(255, 213, 209);
+}
+h2{
+    background-color: salmon;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-size: xx-large;
+    /* align-items: center; */
+}
+.container{
+    box-sizing: border-box;
+     display: grid;
+    /* align-items: center;  */
+    grid-template-columns: 40%;
+    grid-template-areas: "videoinp"
+                        "startstop";
+    grid-template-rows: 90% auto;
+    height: 50vh;
+    justify-content: center;
+}
+
+.videoinp{
+    height: 100%;
+    width: 100%;
+}
+.videoinp video{
+    height: 100%;
+    width: 100%;
+}
+.startstop{
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+.startstop button{
+    height: auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    background-color: rgb(255, 233, 230);
+}
+button:hover{
+    background-color: white;
+}
+.download{
+    display: flex;
+    justify-content: center;
+}
+/* a{
+
+} */
