@@ -5,6 +5,8 @@ const video = document.getElementById('preview');
 const startBtn = document.getElementById('startBtn');
 const stopBtn = document.getElementById('stopBtn');
 const downloadLink = document.getElementById('downloadLink');
+const messageBox = document.querySelector('.message')
+
 
 let mediaRecorder;
 let recordedChunks = [];
@@ -34,24 +36,29 @@ async function uploadVideo() {
   formData.append("video", blob, "recording.mp4");
 
   try {
-    console.log("⏫ Uploading video...");
+    // console.log("⏫ Uploading video...");
 
     const response = await fetch("http://localhost:5000/upload", {
       method: "POST",
       body: formData,
     });
 
-    console.log("📩 Raw response:", response);
+    // console.log("📩 Raw response:", response);
 
     // Read response safely
     const text = await response.text();
-    console.log("📦 Raw response text:", text);
+    // console.log("📦 Raw response text:", text);
 
     // Try to parse JSON
     let result;
     try {
       result = JSON.parse(text);
-      console.log("✅ Parsed result:", result);
+      // console.log("✅ Parsed result:", result);
+      if(result){
+        let message = result.message
+        messageBox.innerHTML = `${message}`;
+
+      }
     } catch {
       console.warn("⚠️ Response is not JSON:", text);
     }
