@@ -16,7 +16,7 @@ session = ort.InferenceSession(MODEL_PATH, providers=["CPUExecutionProvider"])
 input_name = session.get_inputs()[0].name
 
 def sigmoid(x):
-    return 1 / (1 + np.exp(x))
+    return 1 / (1 + np.exp(-x))
 
 # ---- Utility: Preprocess image ----
 def preprocess_image(frame):
@@ -37,49 +37,72 @@ def detect_potholes():
         file.save(file_path)
         print(f"📁 Saved uploaded video to: {file_path}")
 
-        # Read video (use first frame for demo)
+        # Open video
         cap = cv2.VideoCapture(file_path)
-        ret, frame = cap.read()
+        if not cap.isOpened():
+            return jsonify({"error": "Could not open video"}), 400
+
+        max_conf = 0.0
+        frame_index = -1
+        frame_count = 0
+
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                break  # End of video
+
+            # Process every nth frame (optional)
+            if frame_count % 5 != 0:
+                frame_count += 1
+                continue
+
+            img = preprocess_image(frame)
+            outputs = session.run(None, {input_name: img})[0]
+
+            # Transpose if needed
+            if outputs.shape[0] < outputs.shape[1]:
+                outputs = outputs.T
+
+            boxes = outputs[:, :4]
+            objectness_raw = outputs[:, 4]
+            class_scores_raw = outputs[:, 5:]
+
+            # Apply sigmoid
+            objectness = sigmoid(objectness_raw)
+            class_conf = sigmoid(class_scores_raw)
+
+            # For single-class, just take first column
+            if class_conf.shape[1] == 1:
+                final_conf = objectness * class_conf[:, 0]
+            else:
+                final_conf = objectness * np.max(class_conf, axis=1)
+
+            frame_max_conf = float(np.max(final_conf))
+
+            if frame_max_conf > max_conf:
+                max_conf = frame_max_conf
+                frame_index = frame_count
+
+            frame_count += 1
+
         cap.release()
-
-        if not ret or frame is None:
-            return jsonify({"error": "Could not read video frame"}), 400
-
-        # Preprocess and run inference
-        img = preprocess_image(frame)
-        outputs = session.run(None, {input_name: img})[0]
-
-        # Handle YOLO output: (1, N, 85)
-        if outputs.ndim == 3:
-            outputs = outputs[0]
-
-        # Extract objectness and class scores
-        objectness_raw = outputs[:, 4]
-        class_scores_raw = outputs[:, 5:]
-
-        objectness = sigmoid(objectness_raw)
-        class_conf = sigmoid(class_scores_raw)
-        final_conf = objectness * np.max(class_conf, axis=1)
-        max_conf = float(np.max(final_conf))
-
-        print(f"🔍 Max confidence detected: {max_conf:.4f}")
-
+        print(max_conf)
         # Decide threshold
-        threshold = 0.5
+        threshold = 0.2530  # lower threshold for demo
         if max_conf > threshold:
-            message = "⚠️ Potholes detected"
+            message = f"⚠️ Potholes detected (frame {frame_index})"
         else:
             message = "✅ No potholes detected"
 
         return jsonify({
             "message": message,
-            "max_confidence": round(max_conf, 4)
+            "max_confidence": round(max_conf, 4),
+            "frame_index": frame_index
         })
 
     except Exception as e:
         print("❌ Error during detection:", str(e))
         return jsonify({"error": str(e)}), 500
-
 # ---- Run App ----
 if __name__ == "__main__":
     app.run(debug=True)
