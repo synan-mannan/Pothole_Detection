@@ -88,7 +88,7 @@ def detect_potholes():
         cap.release()
         print(max_conf)
         # Decide threshold
-        threshold = 0.2530  # lower threshold for demo
+        threshold = 0.6  # lower threshold for demo
         if max_conf > threshold:
             message = f"⚠️ Potholes detected (frame {frame_index})"
         else:

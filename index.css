@@ -1,63 +1,160 @@
-*{
+* {
     margin: 0;
     padding: 0;
-}
-body{
-    background-color: rgb(255, 255, 255);
-}
-h2{
-    background-color: rgb(253, 94, 76);
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    font-size: xx-large;
-    /* align-items: center; */
-}
-.container{
     box-sizing: border-box;
-     display: grid;
-    /* align-items: center;  */
-    grid-template-columns: 40%;
-    grid-template-areas: "videoinp"
-                        "startstop";
-    grid-template-rows: 80% 10% 10%;
-    justify-content: center;
-    height: 90vh;
 }
-.message{
-    font-size: 2rem;
-    display: flex;
-    justify-self: center;
-}
-.videoinp{
-    height: 100%;
-    width: 100%;
-}
-.videoinp video{
-    height: 100%;
-    width: 100%;
-}
-.startstop{
-    display: flex;
-    height: 100%;
-    width: 100%;
-}
-.startstop button{
-    height: auto;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    background-color: rgb(255, 233, 230);
-}
-button:hover{
-    background-color: white;
-}
-.download{
-    display: flex;
-    justify-content: center;
-}
-/* a{
 
-} */
+body {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+h2 {
+    background: linear-gradient(135deg, #ff6b6b, #ffa500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 20px;
+    width: 100%;
+    max-width: 600px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.videoinp {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.videoinp video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.startstop {
+    display: flex;
+    gap: 10px;
+}
+
+.startstop button {
+    flex: 1;
+    padding: 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.startstop button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.startstop button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.message {
+    font-size: 1.2rem;
+    text-align: center;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flash {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 0, 0, 0.95);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease-in-out;
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+}
+
+.flash.fade-out {
+    animation: fadeOut 0.3s ease-in-out;
+}
+
+.flash img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    h2 {
+        font-size: 2rem;
+    }
+
+    .container {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .startstop {
+        flex-direction: column;
+    }
+
+    .startstop button {
+        padding: 12px;
+        font-size: 1rem;
+    }
+
+    .message {
+        font-size: 1rem;
+    }
+}

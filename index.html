@@ -7,6 +7,7 @@
 </head>
 <body>
     <h2>Webcam Recorder</h2>
+
   <div class="container">
         <div class="videoinp">
             <video id="preview" autoplay playsinline></video>
@@ -17,7 +18,10 @@
         </div>
         <div class="message"></div>
     </div>
-    <div class="download"><a id="downloadLink" style="display:none;">Download Video</a></div>
+    <div id="flash" class="flash">
+      <img src="https://www.roadweb.uk/wp-content/uploads/2011/06/roadsign1.jpg" alt="Pothole Detected">
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.14.0/dist/ort.min.js"></script>
   <script src="index.js"></script>
 </body>
 </html>
