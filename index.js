@@ -14,7 +14,7 @@ let detectionInterval;
 // Load ONNX model
 async function loadModel() {
   try {
-    session = await ort.InferenceSession.create('best.onnx');
+    session = await ort.InferenceSession.create('model.onnx');
     console.log('Model loaded successfully');
   } catch (err) {
     console.error('Failed to load model:', err);
@@ -108,7 +108,8 @@ function startDetection() {
     let conf = await detectPotholes(canvas);
     conf = conf/100
     conf.toFixed(2)
-    if (conf > 0.75) { 
+    // console.log(conf)
+    if (conf > 0.72) { 
       console.log(conf)
       // Adjusted threshold
       messageBox.innerHTML = `⚠️ Pothole detected! Confidence: ${(conf * 100).toFixed(2)}%`;
@@ -117,7 +118,7 @@ function startDetection() {
     } else {
       messageBox.innerHTML = 'No potholes detected.';
     }
-  }, 100); // Process every 100ms
+  }, 200); // Process every 100ms
 }
 
 // Stop detection
