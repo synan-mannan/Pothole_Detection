@@ -108,9 +108,9 @@ function startDetection() {
     let conf = await detectPotholes(canvas);
     conf = conf/100
     conf.toFixed(2)
-    // console.log(conf)
+    console.log(conf)
     if (conf > 0.72) { 
-      console.log(conf)
+      // console.log(conf)
       // Adjusted threshold
       messageBox.innerHTML = `⚠️ Pothole detected! Confidence: ${(conf * 100).toFixed(2)}%`;
       flashScreen();
